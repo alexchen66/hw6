@@ -476,7 +476,7 @@ void HashTable<K,V,Prober,Hash,KEqual>::resize()
      */
     if (mIndex_ >= sizeof(CAPACITIES) / sizeof(CAPACITIES[0]) - 1) 
     {
-        throw std::logic_error("resize error")
+        throw std::logic_error("resize error");
     }
     ++mIndex_;
     std::vector<HashItem*> new_table = table_;
