@@ -89,16 +89,23 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 			boggleHelper(dict, prefix, board, "", result, i, j, 1, 1, score);
 		}
 	}
-  std::map<std::string, int>::iterator it;
-  for (it = score.begin(); it != score.end(); it++)
-  {
-      // cout << it->first << endl;
-      if (it->second > 0)
-      {
-          result.insert(it->first);
-      }
-  }
-	return result;
+  std::map<std::string, int>::iterator it = score.begin();
+  convert(result, score, it);
+  return result;
+}
+
+void convert(std::set<std::string>& result, std::map<std::string, int>& score, std::map<std::string, int>::iterator it)
+{
+    if (it == score.end())
+    {
+        return;
+    }
+    if (it->second > 0)
+    {
+        result.insert(it->first);
+    }
+    ++it;
+    convert(result, score, it);
 }
 
 bool boggleHelper(const std::set<std::string>& dict, 
