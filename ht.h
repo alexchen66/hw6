@@ -372,7 +372,7 @@ void HashTable<K,V,Prober,Hash,KEqual>::insert(const ItemType& p)
     }
     else
     {
-        table_[probed_value]->item = p;
+        table_[probed_value]->item.second = p.second;
         table_[probed_value]->deleted = false;
     }
 }
@@ -383,19 +383,14 @@ void HashTable<K,V,Prober,Hash,KEqual>::remove(const KeyType& key)
 {
     // Removes (marks as deleted) the item with the given key.  
     // Does nothing if an item with the given key does not exist.
-    HASH_INDEX_T h = this-> probe(key);
-    if(h == npos)
+    HASH_INDEX_T probed_value = this->probe(key);
+    if (probed_value != npos)
     {
-        cout << "No key to remove" << endl;
-    }
-    else if(table_[h] == nullptr)
-    {
-        cout << "No value in the key to remove" << endl;
-    }
-    else 
-    {
-        table_[h] -> deleted = true;
-        allPair --;
+        if (table_[probed_value] != nullptr)
+        {
+            table_[probed_value] -> deleted = true;
+            allPair -= 1;
+        }
     }
 }
 
@@ -479,6 +474,10 @@ void HashTable<K,V,Prober,Hash,KEqual>::resize()
      * 
      * @throws std::logic_error if no more CAPACITIES exist
      */
+    if (mIndex_ >= sizeof(CAPACITIES) / sizeof(CAPACITIES[0]) - 1) 
+    {
+        throw std::logic_error("resize error")
+    }
     ++mIndex_;
     std::vector<HashItem*> new_table = table_;
     table_.clear();
