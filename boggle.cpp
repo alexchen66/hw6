@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <fstream>
 #include <exception>
+#include <map>
 #endif
 
 #include "boggle.h"
@@ -77,23 +78,83 @@ std::pair<std::set<std::string>, std::set<std::string> > parseDict(std::string f
 
 std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board)
 {
+  std::map<std::string, int> score;
 	std::set<std::string> result;
 	for(unsigned int i=0;i<board.size();i++)
 	{
 		for(unsigned int j=0;j<board.size();j++)
 		{
-			boggleHelper(dict, prefix, board, "", result, i, j, 0, 1);
-			boggleHelper(dict, prefix, board, "", result, i, j, 1, 0);
-			boggleHelper(dict, prefix, board, "", result, i, j, 1, 1);
+			boggleHelper(dict, prefix, board, "", result, i, j, 0, 1, score);
+			boggleHelper(dict, prefix, board, "", result, i, j, 1, 0, score);
+			boggleHelper(dict, prefix, board, "", result, i, j, 1, 1, score);
 		}
 	}
-	
+  std::map<std::string, int>::iterator it;
+  for (it = score.begin(); it != score.end(); it++)
+  {
+      // cout << it->first << endl;
+      if (it->second > 0)
+      {
+          result.insert(it->first);
+      }
+  }
 	return result;
 }
 
-bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
-								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
+bool boggleHelper(const std::set<std::string>& dict, 
+                  const std::set<std::string>& prefix, 
+                  const std::vector<std::vector<char> >& board, 
+                  std::string word, 
+                  std::set<std::string>& result, 
+                  unsigned int r, // row
+                  unsigned int c, // column
+                  int dr, 
+                  int dc,
+                  std::map<std::string, int>& score)
+                  // use a score map to mimic the n-queens
 {
-//add your solution here!
-
+    //add your solution here!
+    // note: check prefix set 
+    if (r >= board.size() || c >= board.size())
+    {
+        return false;
+    }
+    word += board[r][c];
+    bool exist_word = (dict.find(word) != dict.end());
+    if (prefix.find(word) == prefix.end() && !exist_word)
+    {
+        return false;
+    }
+    else
+    {
+        if (exist_word)
+        {
+            if (score.find(word) == score.end())
+            {
+                // if word exist, add 1
+                score[word] = 1;
+            }
+            else
+            {   
+                score[word] += 1;
+            }
+        }
+    }
+    bool exist_longer = boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc, score);
+    if (exist_word)
+    {
+        if (!exist_longer)
+        {
+            return true;
+        }
+        else
+        {
+            if (score.find(word) != score.end())
+            {
+                // now if the word has a longer, then - score by 1
+                score[word] -= 1;
+            }
+        }
+    }
+    return exist_longer;
 }

@@ -23,9 +23,11 @@ int main()
         std::stringstream ss;
         ss << "hi" << i;
         ht.insert({ss.str(), i});
+        cout << "HT size here: " << ht.size() << endl;
     }
     if( ht.find("hi1") != nullptr ){
         cout << "Found hi1" << endl;
+        cout << "hi1 value is: " << ht["hi1"] << endl;
         ht["hi1"] += 1;
         cout << "Incremented hi1's value to: " << ht["hi1"] << endl;
     }
@@ -33,7 +35,14 @@ int main()
         cout << "Did not find: doesnotexist" << endl;
     }
     cout << "HT size: " << ht.size() << endl;
+    if( ht.find("hi7") != nullptr ){
+        cout << "hi7 value is: " << ht["hi7"] << endl;
+        cout << "Found hi7" << endl;
+    }
     ht.remove("hi7");
+    if( ht.find("hi7") == nullptr ){
+    cout << "hi7 is removed" << endl;
+    }
     ht.remove("hi9");
     cout << "HT size: " << ht.size() << endl;
     if( ht.find("hi9") != nullptr ){
@@ -44,5 +53,10 @@ int main()
     }
     ht.insert({"hi7",17});
     cout << "size: " << ht.size() << endl;
+    ht.insert({"hi3",3});
+    ht.insert({"hi4",4});
+    ht.insert({"hi5",5});
+    ht.insert({"hi6",6});
+    cout << "size after inserting 3456: " << ht.size() << endl;
     return 0;
 }
