@@ -329,7 +329,7 @@ template<typename K, typename V, typename Prober, typename Hash, typename KEqual
 bool HashTable<K,V,Prober,Hash,KEqual>::empty() const
 {
     // Returns true if the table has no non-deleted key,value pairs, false otherwise
-    if (allPair == 0)
+    if (nondeletedPair == 0)
     {
         return true;
     }
@@ -341,7 +341,7 @@ template<typename K, typename V, typename Prober, typename Hash, typename KEqual
 size_t HashTable<K,V,Prober,Hash,KEqual>::size() const
 {
     // Returns number of (non-deleted) key,value pairs in the table
-    return allPair;
+    return nondeletedPair;
 }
 
 // To be completed
@@ -353,7 +353,7 @@ void HashTable<K,V,Prober,Hash,KEqual>::insert(const ItemType& p)
     // it updates the Value of that item with the second value of the pair, p
     // before inserting any new element, you should resize (to the next larger size in 
     // the list above) if the current loading factor is at or above the given alpha.
-    double loading_factor = (static_cast<double>(nondeletedPair)) / (static_cast<double>(table_.size()));
+    double loading_factor = (static_cast<double>(allPair)) / (static_cast<double>(table_.size()));
     // std::cout << "table size: " << table_.size() << endl;
     if (loading_factor >= resizeAlpha_)
     {
@@ -389,7 +389,7 @@ void HashTable<K,V,Prober,Hash,KEqual>::remove(const KeyType& key)
         if (table_[probed_value] != nullptr)
         {
             table_[probed_value] -> deleted = true;
-            allPair -= 1;
+            nondeletedPair -= 1;
         }
     }
 }
