@@ -302,13 +302,13 @@ HashTable<K,V,Prober,Hash,KEqual>::HashTable(
     totalProbes_ = 0;
     mIndex_ = 0;
     resizeAlpha_ = resizeAlpha;
-    allPair = 0;
-    nondeletedPair = 0;
     table_.resize(CAPACITIES[mIndex_]);
     for (int i = 0; i < table_.size(); i++)
     {
         table_[i] = nullptr;
     }
+    allPair = 0;
+    nondeletedPair = 0;
 }
 
 // To be completed
@@ -372,7 +372,7 @@ void HashTable<K,V,Prober,Hash,KEqual>::insert(const ItemType& p)
     }
     else
     {
-        table_[probed_value]->item.second = p.second;
+        table_[probed_value]->item = p;
         table_[probed_value]->deleted = false;
     }
 }
