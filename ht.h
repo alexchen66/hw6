@@ -383,14 +383,19 @@ void HashTable<K,V,Prober,Hash,KEqual>::remove(const KeyType& key)
 {
     // Removes (marks as deleted) the item with the given key.  
     // Does nothing if an item with the given key does not exist.
-    HASH_INDEX_T probed_value = this->probe(key);
-    if (probed_value != npos)
+    HASH_INDEX_T h = this-> probe(key);
+    if(h == npos)
     {
-        if (table_[probed_value] != nullptr)
-        {
-            table_[probed_value] -> deleted = true;
-            allPair -= 1;
-        }
+        cout << "No key to remove" << endl;
+    }
+    else if(table_[h] == nullptr)
+    {
+        cout << "No value in the key to remove" << endl;
+    }
+    else 
+    {
+        table_[h] -> deleted = true;
+        allPair --;
     }
 }
 
