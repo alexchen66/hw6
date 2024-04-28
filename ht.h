@@ -474,9 +474,10 @@ void HashTable<K,V,Prober,Hash,KEqual>::resize()
      * 
      * @throws std::logic_error if no more CAPACITIES exist
      */
+    ++mIndex_;
     std::vector<HashItem*> new_table = table_;
     table_.clear();
-    table_.resize(CAPACITIES[++mIndex_]);
+    table_.resize(CAPACITIES[mIndex_]);
     nondeletedPair = 0;
     allPair = 0;
     for (size_t i = 0; i < new_table.size(); i++)
